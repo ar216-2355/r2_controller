@@ -23,8 +23,8 @@ public:
 
     bool is_ready() const { return is_calibrated_; }
 
-    bool elevator_percent(float taeget, float ele_curr, robomas_interfaces::msg::RobomasPacket& packet) {
-        if (!is_calibrated_) return;
+    bool elevator_percent(float target, float ele_curr, robomas_interfaces::msg::RobomasPacket& packet) {
+        if (!is_calibrated_) return false;
 
         float motor_target =  (target * something) + ele_zero_;
 
@@ -34,6 +34,10 @@ public:
         cmd.target = motor_target;
         packet.motors.push_back(cmd);
 
-        if(std::abs(ele_curr - motor_target) < 3)
+        if(std::abs(ele_curr - motor_target) < 3){
+            return true;
+        }else{
+            return false;
+        }
     }
 };

@@ -38,7 +38,7 @@ public:
     bool is_ready() const { return is_calibrated_; }
 
     bool left_arm_angle(float target_deg, float LF_curr, float LB_curr, robomas_interfaces::msg::RobomasPacket& packet) {
-        if (!is_calibrated_) return;
+        if (!is_calibrated_) return false;
 
         float motor_target_1 =  (target_deg * GEAR_RATIO) + LF_zero_;
         float motor_target_2 = -(target_deg * GEAR_RATIO) + LB_zero_;
@@ -63,7 +63,7 @@ public:
     }
 
     bool right_arm_angle(float target_deg, float RB_curr, float RF_curr, robomas_interfaces::msg::RobomasPacket& packet) {
-        if (!is_calibrated_) return;
+        if (!is_calibrated_) return false;
 
         float motor_target_3 =  (target_deg * GEAR_RATIO) + RB_zero_;
         float motor_target_4 = -(target_deg * GEAR_RATIO) + RF_zero_;

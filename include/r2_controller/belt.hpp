@@ -5,7 +5,7 @@
 #include "r2_controller/r2_constants.hpp"
 
 inline void move_belts(float v, robomas_interfaces::msg::RobomasPacket& packet) {
-    const float R = 0.01           // 半径
+    const float R = 0.01;           // 半径
     const float M2006_GEAR = 36.0; // ギア比
     const float TO_RPM = 60.0 / (2.0 * M_PI * R);
 
