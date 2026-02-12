@@ -32,7 +32,7 @@ namespace MotorId {
 }
 
 struct MotorData {
-    float angle;     // 累積回転角度 [deg]
-    float velocity;  // 回転速度 [rpm]
-    int16_t torque;  // トルク電流値 (M3508/M2006の生値)
+    float angle = 0.0;     // 累積回転角度 [deg]
+    float velocity = 0.0;  // 回転速度 [rpm]
+    int16_t torque = 0;  // トルク電流値 (M3508/M2006の生値)
 };

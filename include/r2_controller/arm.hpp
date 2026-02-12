@@ -37,7 +37,7 @@ public:
 
     bool is_ready() const { return is_calibrated_; }
 
-    void left_arm_angle(float target_deg, robomas_interfaces::msg::RobomasPacket& packet) {
+    bool left_arm_angle(float target_deg, float LF_curr, float LB_curr, robomas_interfaces::msg::RobomasPacket& packet) {
         if (!is_calibrated_) return;
 
         float motor_target_1 =  (target_deg * GEAR_RATIO) + LF_zero_;
@@ -54,9 +54,15 @@ public:
         cmd.mode = Mode::POSITION; 
         cmd.target = motor_target_2;
         packet.motors.push_back(cmd);
+
+        if((std::abs(LF_curr - motor_target_1) < 3) && (std::abs(LB_curr - motor_target_2) < 3)){
+            return true;
+        }else{
+            return false;
+        }
     }
 
-    void right_arm_angle(float target_deg, robomas_interfaces::msg::RobomasPacket& packet) {
+    bool right_arm_angle(float target_deg, float RB_curr, float RF_curr, robomas_interfaces::msg::RobomasPacket& packet) {
         if (!is_calibrated_) return;
 
         float motor_target_3 =  (target_deg * GEAR_RATIO) + RB_zero_;
@@ -73,5 +79,11 @@ public:
         cmd.mode = Mode::POSITION; 
         cmd.target = motor_target_4;
         packet.motors.push_back(cmd);
+
+        if((std::abs(RB_curr - motor_target_3) < 3) && (std::abs(RF_curr - motor_target_4) < 3)){
+            return true;
+        }else{
+            return false;
+        }
     }
 };
