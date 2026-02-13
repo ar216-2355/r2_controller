@@ -160,6 +160,7 @@
 #include "r2_controller/omuni.hpp"
 #include "r2_controller/arm.hpp"
 #include "r2_controller/elevator.hpp"
+#include "r2_controller/belt.hpp"
 
 using namespace std::chrono_literals;
 
@@ -216,11 +217,45 @@ private:
 
         switch (state_) {
             case 0: {
+                if(kakuno_ok == false) break;
+                current_LF_omuni = current_motors_[MotorId::OMUNI_LF-1].angle;
+
                 set_omni_velocity(-0.5, 0.0, 0.0, msg);
+
+                if (current_LF_omuni - start_LF_omuni < -5000) {
+                    state_ = 1; // 次の状態へ進む！
+                    set_omni_velocity(0.0, 0.0, 0.0, msg);
+                    start_LF_omuni = current_LF_omuni;
+                    RCLCPP_INFO(this->get_logger(), "State 0 完了 -> State 1 へ");
+                }
                 break;
             }
-        pub_cmd_->publish(msg);
+            case 1: {
+                move_belts(-0.3, msg);
+                current_belt = current_motors_[MotorId::BELT_B-1].angle;
+                if (current_belt - start_belt < -100000) {
+                    state_ = 2;
+                    move_belts(0.0, msg);
+                    start_belt = current_belt;
+                    RCLCPP_INFO(this->get_logger(), "State 4 完了 -> State 5 へ");
+                }
+                break;
+            }
+            case 2: {
+                bool finish1 = arm_ctrl_.left_arm_angle(0, current_motors_[MotorId::ARM_LF-1].angle, current_motors_[MotorId::ARM_LB-1].angle, msg);
+                bool finish2 = arm_ctrl_.right_arm_angle(0, current_motors_[MotorId::ARM_RB-1].angle, current_motors_[MotorId::ARM_RF-1].angle, msg);
+                if (finish1 && finish2) {
+                    state_ = 3;
+                    RCLCPP_INFO(this->get_logger(), "State 2 完了 -> State 3 へ");
+                }
+                break;
+            }
+            case 3: {
+                break;
+            }
         }
+        pub_cmd_->publish(msg);
+        
     }
 
 

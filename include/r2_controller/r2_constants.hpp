@@ -18,14 +18,14 @@ namespace MotorId {
     constexpr uint8_t OMUNI_RF = 4; // 右前
     
     // --- アーム ---
-    constexpr uint8_t ARM_LF = 5; // アーム左前
-    constexpr uint8_t ARM_LB = 6; // アーム左後
-    constexpr uint8_t ARM_RB = 7; // アーム右後
-    constexpr uint8_t ARM_RF = 8; // アーム右前
+    constexpr uint8_t ARM_LF = 9; // アーム左前
+    constexpr uint8_t ARM_LB = 10; // アーム左後
+    constexpr uint8_t ARM_RB = 5; // アーム右後
+    constexpr uint8_t ARM_RF = 6; // アーム右前
 
     // --- アームベルト ---
-    constexpr uint8_t BELT_F = 9;  // ベルト前
-    constexpr uint8_t BELT_B = 10; // ベルト後
+    constexpr uint8_t BELT_F = 8;  // ベルト前
+    constexpr uint8_t BELT_B = 7; // ベルト後
 
     // --- 昇降 ---
     constexpr uint8_t ELEVATOR = 11;

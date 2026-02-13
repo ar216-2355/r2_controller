@@ -7,11 +7,11 @@
 
 class ArmController {
 private:
-    const float GEAR_RATIO = 100.0f;           // ギア比
-    const float LF_START_ANGLE = 92.0f;
-    const float LB_START_ANGLE = 92.0f;
-    const float RB_START_ANGLE = 92.0f;
-    const float RF_START_ANGLE = 92.0f;
+    const float GEAR_RATIO = 132.82f;           // ギア比
+    const float LF_START_ANGLE = 94.0f;
+    const float LB_START_ANGLE = 94.0f;
+    const float RB_START_ANGLE = 94.0f;
+    const float RF_START_ANGLE = 94.0f;
     
     float LF_zero_ = 0.0f;
     float LB_zero_ = 0.0f;
