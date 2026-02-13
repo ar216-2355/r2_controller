@@ -11,7 +11,7 @@ private:
     const float LF_START_ANGLE = 94.0f;
     const float LB_START_ANGLE = 94.0f;
     const float RB_START_ANGLE = 94.0f;
-    const float RF_START_ANGLE = 94.0f;
+    const float RF_START_ANGLE = 98.0f;
     
     float LF_zero_ = 0.0f;
     float LB_zero_ = 0.0f;

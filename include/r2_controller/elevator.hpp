@@ -7,7 +7,7 @@
 
 class ElevatorController {
 private:
-    const float something = 10.0f;
+    const float something = 29515.0f;
     float ele_zero_ = 0.0;
     bool is_calibrated_ = false;
 
@@ -26,7 +26,7 @@ public:
     bool elevator_percent(float target, float ele_curr, robomas_interfaces::msg::RobomasPacket& packet) {
         if (!is_calibrated_) return false;
 
-        float motor_target =  (target * something) + ele_zero_;
+        float motor_target =  -(target * something) + ele_zero_;
 
         robomas_interfaces::msg::MotorCommand cmd;
         cmd.motor_id = MotorId::ELEVATOR;

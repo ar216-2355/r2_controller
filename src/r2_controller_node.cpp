@@ -220,9 +220,9 @@ private:
                 if(kakuno_ok == false) break;
                 current_LF_omuni = current_motors_[MotorId::OMUNI_LF-1].angle;
 
-                set_omni_velocity(-0.5, 0.0, 0.0, msg);
+                set_omni_velocity(0.2, 0.0, 0.0, msg);
 
-                if (current_LF_omuni - start_LF_omuni < -5000) {
+                if (current_LF_omuni - start_LF_omuni > 2000) {
                     state_ = 1; // 次の状態へ進む！
                     set_omni_velocity(0.0, 0.0, 0.0, msg);
                     start_LF_omuni = current_LF_omuni;
@@ -231,19 +231,18 @@ private:
                 break;
             }
             case 1: {
-                move_belts(-0.3, msg);
-                current_belt = current_motors_[MotorId::BELT_B-1].angle;
-                if (current_belt - start_belt < -100000) {
-                    state_ = 2;
-                    move_belts(0.0, msg);
-                    start_belt = current_belt;
-                    RCLCPP_INFO(this->get_logger(), "State 4 完了 -> State 5 へ");
+                bool finish = ele_ctrl_.elevator_percent(1.0, current_motors_[MotorId::ELEVATOR-1].angle, msg);
+
+                if (finish) {
+                    state_ = 2; // 次の状態へ進む！
+                    RCLCPP_INFO(this->get_logger(), "State 1 完了 -> State 2 へ");
                 }
                 break;
             }
+
             case 2: {
-                bool finish1 = arm_ctrl_.left_arm_angle(0, current_motors_[MotorId::ARM_LF-1].angle, current_motors_[MotorId::ARM_LB-1].angle, msg);
-                bool finish2 = arm_ctrl_.right_arm_angle(0, current_motors_[MotorId::ARM_RB-1].angle, current_motors_[MotorId::ARM_RF-1].angle, msg);
+                bool finish1 = arm_ctrl_.left_arm_angle(-90, current_motors_[MotorId::ARM_LF-1].angle, current_motors_[MotorId::ARM_LB-1].angle, msg);
+                bool finish2 = arm_ctrl_.right_arm_angle(-30, current_motors_[MotorId::ARM_RB-1].angle, current_motors_[MotorId::ARM_RF-1].angle, msg);
                 if (finish1 && finish2) {
                     state_ = 3;
                     RCLCPP_INFO(this->get_logger(), "State 2 完了 -> State 3 へ");
@@ -251,6 +250,72 @@ private:
                 break;
             }
             case 3: {
+                bool finish = ele_ctrl_.elevator_percent(0.0, current_motors_[MotorId::ELEVATOR-1].angle, msg);
+
+                if (finish) {
+                    state_ = 4; // 次の状態へ進む！
+                    RCLCPP_INFO(this->get_logger(), "State 1 完了 -> State 2 へ");
+                }
+                break;
+            }
+            case 4: {
+                move_belts(0.1, msg);
+                current_belt = current_motors_[MotorId::BELT_B-1].angle;
+                if (current_belt - start_belt > 120000) {
+                    state_ = 5;
+                    move_belts(0.0, msg);
+                    start_belt = current_belt;
+                    RCLCPP_INFO(this->get_logger(), "State 4 完了 -> State 5 へ");
+                }
+                break;
+            }
+            case 5: {
+                bool finish = ele_ctrl_.elevator_percent(0.2, current_motors_[MotorId::ELEVATOR-1].angle, msg);
+
+                if (finish) {
+                    state_ = 6; // 次の状態へ進む！
+                    RCLCPP_INFO(this->get_logger(), "State 1 完了 -> State 2 へ");
+                }
+                break;
+            }
+            case 6: {
+                bool finish1 = arm_ctrl_.left_arm_angle(90, current_motors_[MotorId::ARM_LF-1].angle, current_motors_[MotorId::ARM_LB-1].angle, msg);
+                if (finish1) {
+                    state_ = 7;
+                    RCLCPP_INFO(this->get_logger(), "State 2 完了 -> State 3 へ");
+                }
+                break;
+            }
+            case 7: {
+                move_belts(0.1, msg);
+                current_belt = current_motors_[MotorId::BELT_B-1].angle;
+                if (current_belt - start_belt > 40000) {
+                    state_ = 8;
+                    move_belts(0.0, msg);
+                    start_belt = current_belt;
+                    RCLCPP_INFO(this->get_logger(), "State 4 完了 -> State 5 へ");
+                }
+                break;
+            }
+            case 8: {
+                bool finish2 = arm_ctrl_.right_arm_angle(90, current_motors_[MotorId::ARM_RB-1].angle, current_motors_[MotorId::ARM_RF-1].angle, msg);
+                if (finish2) {
+                    state_ = 9;
+                    RCLCPP_INFO(this->get_logger(), "State 2 完了 -> State 3 へ");
+                }
+                break;
+            }
+            case 9: {
+                bool finish = ele_ctrl_.elevator_percent(0.0, current_motors_[MotorId::ELEVATOR-1].angle, msg);
+
+                if (finish) {
+                    state_ = 10; // 次の状態へ進む！
+                    RCLCPP_INFO(this->get_logger(), "State 1 完了 -> State 2 へ");
+                }
+                break;
+            }
+            
+            case 10: {
                 break;
             }
         }
